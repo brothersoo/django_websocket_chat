@@ -120,9 +120,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LOGIN_REDIRECT_URL = '/chats/'
+LOGIN_REDIRECT_URL = '/chat/list/'
 
-LOGOUT_REDIRECT_URL = '/chats'
+LOGOUT_REDIRECT_URL = '/chat/list/'
 
 SESSION_COOKIE_SECURE = True
 
