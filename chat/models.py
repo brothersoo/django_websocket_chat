@@ -7,7 +7,7 @@ from django_websocket_chat.settings import AUTH_USER_MODEL
 
 class Room(TimeStampedModel):
     title = models.CharField(_('title'), max_length=50, null=False)
-    user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    users = models.ManyToManyField(AUTH_USER_MODEL, through='Participate')
 
     class RoomStatus(models.TextChoices):
         ACTIVE: tuple = 'ACT', _('Active')
@@ -22,11 +22,11 @@ class Room(TimeStampedModel):
         db_table = _('dc_room')
 
 
-class RoomsUsers(TimeStampedModel):
+class Participate(TimeStampedModel):
     room = models.ForeignKey(Room, on_delete=models.CASCADE, null=False)
     user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, null=False)
 
     class Meta:
-        verbose_name = _('dc_roomsusers')
-        db_table = _('dc_roomsusers')
+        verbose_name = _('dc_participate')
+        db_table = _('dc_participate')
 
