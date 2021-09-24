@@ -9,6 +9,7 @@ User = get_user_model()
 class UserFactory(DjangoModelFactory):
     email = Faker('ascii_company_email')
     nickname = Faker('user_name')
+    password = Faker('password', length=18)
 
     class Meta:
         model = User

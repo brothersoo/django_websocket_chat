@@ -42,8 +42,14 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @classmethod
     def get_user_by_email(cls, email: str):
-        return cls.objects.get(email=email)
+        try:
+            return cls.objects.get(email=email)
+        except User.DoesNotExist:
+            return None
 
     @classmethod
     def get_user_by_nickname(cls, nickname: str):
-        return cls.objects.get(nickname=nickname)
+        try:
+            return cls.objects.get(nickname=nickname)
+        except User.DoesNotExist:
+            return None

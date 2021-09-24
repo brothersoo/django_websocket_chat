@@ -1,15 +1,39 @@
-from unittest.mock import Mock, patch
-
 from django.test import Client, TestCase
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, hashers
 from django.core.exceptions import ValidationError
 from faker import Faker
+from unittest.mock import Mock, patch
 
+from accounts.factories import UserFactory
 from accounts.forms import UserRegistrationForm
 
 
 User = get_user_model()
 fake = Faker()
+
+
+class UserAuthTest(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = UserFactory.build()
+        cls.raw_password = cls.user.password
+        cls.user.password = hashers.make_password(cls.raw_password)
+        cls.user.save()
+
+        cls.c = Client()
+
+    def test_success_user_login(self):
+        response = self.c.login(email=self.user.email, password=self.raw_password)
+        self.assertTrue(response)
+
+    def test_fail_user_login_via_invalid_email(self):
+        response = self.c.login(email='invalid_email@notacompany.tar', password='qwerty')
+        self.assertFalse(response)
+
+    def test_fail_user_login_via_incorrect_password(self):
+        response = self.c.login(email=self.user.email, password='qwerty')
+        self.assertFalse(response)
 
 
 class UserRegistrationFormTest(TestCase):
@@ -63,12 +87,3 @@ class UserRegistrationFormTest(TestCase):
 
         with self.assertRaises(ValidationError):
             form.clean_nickname()
-
-
-class UserLoginTest(TestCase):
-
-    def test_success_user_login(self):
-        rand_email = fake.ascii_company_email()
-        rand_password = fake.password(length=18)
-        c = Client()
-        c.login(email=rand_email, password=rand_password)

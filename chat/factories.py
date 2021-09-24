@@ -1,11 +1,11 @@
-from factory import Factory, Faker, post_generation
+from factory import Faker, post_generation
 from factory.django import DjangoModelFactory
 
-from ..models import Room, Participate
+from chat.models import Room
 
 
 class RoomFactory(DjangoModelFactory):
-    title = Faker('sentence')
+    title = Faker('sentence', nb_words=3)
 
     @post_generation
     def users(self, create, extracted, **kwargs):

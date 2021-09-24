@@ -28,7 +28,7 @@ class UserRegistrationForm(UserCreationForm):
     def clean_nickname(self):
         self.error_messages['existing_nickname'] = _('Already existing nickname')
         nickname = self.cleaned_data.get("nickname")
-        if User.get_user_by_nickname():
+        if User.get_user_by_nickname(nickname):
             raise ValidationError(
                 self.error_messages['existing_nickname'],
                 code='existing_nickname',
