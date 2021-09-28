@@ -1,6 +1,5 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db import transaction
 from django.db.models import Count
 from django.db.models.query import Prefetch
 from django.http import HttpResponseRedirect
@@ -17,13 +16,18 @@ User = get_user_model()
 
 class ChatListView(TemplateView):
     template_name = 'chat/chat_room_list.html'
-    queryset = Room.objects.filter(status=Room.RoomStatus.ACTIVE)\
-        .annotate(participant_count=Count('users'))\
-        .order_by('-created_at')
+    queryset = None
+
+    def get_queryset(self):
+        if self.queryset is None:
+            self.queryset = Room.objects.filter(status=Room.RoomStatus.ACTIVE)\
+                .annotate(participant_count=Count('users'))\
+                .order_by('-created_at')
+        return self.queryset
 
     def get(self, request, *args, **kwargs):
         return self.render_to_response({
-            'chat_rooms': self.queryset
+            'chat_rooms': self.get_queryset()
         })
 
 
@@ -55,12 +59,11 @@ class ChatRoomCreateView(LoginRequiredMixin, CreateView):
     form_class = RoomCreateForm
     template_name_suffix = '_create_form'
 
-    @transaction.atomic
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
 
     def form_valid(self, form):
-        self.object = form.save(user=self.request.user, commit=False)
+        self.object = form.save(user=self.request.user)
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
