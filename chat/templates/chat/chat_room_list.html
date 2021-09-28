@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}<title>게시글 목록</title>{% endblock title %}
+{% block title %}<title>채팅 목록</title>{% endblock title %}
 
 {% block css %}
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
@@ -12,12 +12,12 @@
 {% block content %}
 <table class="table table-hover table-responsive">
     <thead>
-        <th>번호</th><th>제목</th><th>참여인원</th><th>생성날짜</th>
+    <th>번호</th><th>제목</th><th>참여인원</th><th>생성날짜</th><th>방장</th>
     </thead>
     <tbody>
         {% for chat_room in chat_rooms %}
         <tr onclick="location.href='/chat/{{ chat_room.pk }}/'">  <!-- 테이블 행 click 시 url 이동 -->
-            <td>{{ chat_room.pk }}</td><td>{{ chat_room.title }}</td><td>{{ chat_room.participant_count }}</td><td>{{ chat_room.created_at }}</td>
+            <td>{{ chat_room.pk }}</td><td>{{ chat_room.title }}</td><td>{{ chat_room.participant_count }}</td><td>{{ chat_room.created_at }}</td><td>{{ chat_room.creator.nickname }}</td>
         </tr>
         {% endfor %}
     </tbody>
