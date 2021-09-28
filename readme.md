@@ -21,6 +21,57 @@ $ python manage.py runserver
 `$ redis-server`
 ```
 
+### local database setting
+
+Postgresql is strongly recommended. Local postgresql database is required. 
+
+Create a `.env` file in `django_websocket_chat/django_websocket_chat`
+
+```
+# ./django_websocket_chat
+
+├─ accounts
+│ └── ...
+├─ chat
+│ └── ...
+├─ core
+│ └── ...
+├─ django_websocket_chat
+│ └── .env                          # Here! #
+├─ static
+│ └── ...
+├─ templates
+│ └── ...
+├─ manage.py
+├─ readme.md
+└─ requirements.txt
+```
+
+Fill in your local database credentials.
+
+```
+# .env
+
+SECRET_KEY=your_secret_key
+
+DB_NAME=your_databse_name
+DB_USER=your_database_user
+DB_PASSWORD=your_database_password
+DB_HOST=your_database_host
+DB_PORT=your_database_port
+
+TEST_DB_NAME=your_test_database_name
+TEST_DB_USER=your_test_database_user
+TEST_DB_PASSWORD=your_test_database_password
+TEST_DB_HOST=your_test_database_host
+TEST_DB_PORT=your_test_database_port
+```
+
+`$ python manage.py makemigrations`
+
+`$ python manage.py migrate`
+
+
 ## Guide
 
 Images for scenarios are shown with two browsers to show live interactions. 
