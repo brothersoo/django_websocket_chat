@@ -65,6 +65,9 @@ TEMPLATES = [
     },
 ]
 
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -78,9 +81,10 @@ LOGGING = {
         'level': 'WARNING',
     },
     'loggers': {
-        'django.template': {
+        'django': {
             'handlers': ['console'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG')
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'propagate': False,
         },
     },
 }

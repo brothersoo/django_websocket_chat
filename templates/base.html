@@ -1,6 +1,10 @@
 <!DOCTYPE html>
+
+{% load static %}
+
 <html lang="ko">
     <head>
+        <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
         {% block title %}
         <title>let's chat</title>
         {% endblock title %}
