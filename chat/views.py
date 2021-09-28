@@ -1,13 +1,18 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db import transaction
 from django.db.models import Count
-from django.shortcuts import render
-from django.views.generic import TemplateView
+from django.db.models.query import Prefetch
+from django.http import HttpResponseRedirect
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, TemplateView
 
-from .models import Room
+from chat.forms import RoomCreateForm
+from chat.models import Room, Participate
+from chat.utils import participate
 
 
-def index(request):
-    return render(request, 'chat/index.html', {})
+User = get_user_model()
 
 
 class ChatListView(TemplateView):
@@ -27,9 +32,36 @@ class ChatRoomView(LoginRequiredMixin, TemplateView):
     queryset = Room.objects.filter(status=Room.RoomStatus.ACTIVE)
 
     def get(self, request, *args, **kwargs):
-        instance = self.queryset.get(id=self.kwargs['room_id'])
-        print(type(request.user))
+        instance: Room = Room.objects.prefetch_related(
+            Prefetch(
+                'participate_set',
+                queryset=Participate.objects.select_related('user').filter(
+                    status=Participate.ParticipateStatus.PARTICIPATING
+                )
+            )
+        ).annotate(participant_count=Count('users')).get(id=self.kwargs['room_id'])
+
+        participate(instance, request.user)
+
         return self.render_to_response({
             'room': instance,
-            'user_nickname': request.user.nickname
+            'user_nickname': request.user.nickname,
+            'participants': instance.participate_set.values_list('user__nickname', flat=True)
         })
+
+
+class ChatRoomCreateView(LoginRequiredMixin, CreateView):
+    model = Room
+    form_class = RoomCreateForm
+    template_name_suffix = '_create_form'
+
+    @transaction.atomic
+    def post(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        self.object = form.save(user=self.request.user, commit=False)
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse_lazy('chat_room', kwargs={'room_id': self.object.id})
