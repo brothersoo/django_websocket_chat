@@ -2,24 +2,33 @@
 
 {% block title %}<title>{{ room.title }}</title>{% endblock title %}
 
-{% block css %}
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-<style type="text/css">
-    tbody > tr {cursor: pointer;}
-</style>
-{% endblock css %}
-
-
 {% block content %}
+<div>
+    <h2 style="display: inline; margin-left: 30px">{{ room.title }}</h2>
 
-<h2>&nbsp;&nbsp;&nbsp;{{ room.title }}</h2>
+    <form action="" method="post" style="display:inline; margin-left: 50px">
+        <input id="" type="button" class="btn btn-warning my-2 my-sm-0" value="수정">
+    </form>
+</div>
+
 
 <div style="float: left; width: 70%; padding: 30px">
     <h4>채팅</h4>
+
     <textarea id="chat-log" style="width: 100%; height: 600px" readonly></textarea><br>
-    <input id="chat-message-input" type="text" style="width: 100%"><br>
-    <input id="chat-message-submit" type="button" value="Send">
+
+    <input id="chat-message-input" type="text" style="width: 100%; margin-top:10px"><br>
+
+    <div style="padding-top: 10px;">
+        <input id="chat-message-submit" type="button" class="btn btn-primary my-2 my-sm-0" style="display: inline" value="전송">
+
+        <form action="" method="post" style="display:inline; float: right">
+            <input id="leave-room" type="button" class="btn btn-danger my-2 my-sm-0" value="나가기">
+        </form>
+    </div>
+
 </div>
+
 <div style="float: right; width: 30%; padding: 30px">
     <h4>참여자</h4>
     <textarea id="participants" style="width: 100%; height: 600px; text-align: left" readonly>
