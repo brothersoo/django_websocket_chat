@@ -2,6 +2,8 @@
 
 {% load static %}
 
+
+
 <html lang="ko">
     <head>
         <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
@@ -16,6 +18,10 @@
         {% endblock scripts %}
 
         {% block css %}
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+            <style type="text/css">
+                tbody > tr {cursor: pointer;}
+            </style>
         {% endblock css %}
     </head>
     <body>
