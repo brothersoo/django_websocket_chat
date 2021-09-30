@@ -9,7 +9,7 @@ User = get_user_model()
 
 @transaction.atomic()
 def participate(room: Room, user: User) -> None:
-    if room.creator is user:
+    if room.creator == user:
         return
 
     try:

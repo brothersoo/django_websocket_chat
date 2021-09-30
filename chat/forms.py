@@ -12,5 +12,7 @@ class RoomCreateForm(ModelForm):
 
     def save(self, **kwargs):
         self.instance.creator = kwargs.pop('user')
-        super(RoomCreateForm, self).save(**kwargs)
-        return self.instance
+        instance: Room = super(RoomCreateForm, self).save(**kwargs)
+        instance.save()
+        return instance
+

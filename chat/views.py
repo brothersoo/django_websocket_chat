@@ -63,7 +63,7 @@ class ChatRoomCreateView(LoginRequiredMixin, CreateView):
         return super().post(request, *args, **kwargs)
 
     def form_valid(self, form):
-        self.object = form.save(user=self.request.user)
+        self.object = form.save(user=self.request.user, commit=False)
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):

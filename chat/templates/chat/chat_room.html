@@ -32,8 +32,10 @@
 <div style="float: right; width: 30%; padding: 30px">
     <h4>참여자</h4>
     <textarea id="participants" style="width: 100%; height: 600px; text-align: left" readonly>
+
+        방장 : {{ room.creator.nickname }}
         {% for participant in participants %}
-        {{ participant }}
+        참여자 : {{ participant }}
         {% endfor %}
     </textarea><br>
 </div>
